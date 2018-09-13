@@ -37,7 +37,7 @@ public class CategoriaResource {
 	// Salva a criação da categoria no BD
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Categoria> criar(@RequestBody Categoria categoria, HttpServletResponse response) {
+	public ResponseEntity criar(@RequestBody Categoria categoria, HttpServletResponse response) {
 		Categoria categoriaSalva = categoriaRepository.save(categoria);//Consigo pegar o código
 		
 		//      Vou pegar da classe ServletUriComponentsBuilder e requisição atual (que é categoria) depois adicionar o código     

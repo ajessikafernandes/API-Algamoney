@@ -3,13 +3,10 @@ package com.example.algamoney.api.resource;
 import java.net.URI;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,7 +34,7 @@ public class CategoriaResource {
 	// Salva a criação da categoria no BD
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Categoria> criar(@RequestBody Categoria categoria, HttpServletResponse response) {
+	public ResponseEntity criar(@RequestBody Categoria categoria) {
 		Categoria categoriaSalva = categoriaRepository.save(categoria);//Consigo pegar o código
 		
 		//      Vou pegar da classe ServletUriComponentsBuilder e requisição atual (que é categoria) depois adicionar o código     
@@ -46,14 +43,14 @@ public class CategoriaResource {
 				.buildAndExpand(categoriaSalva.getCodigo())
 				.toUri();
 		//"seta" o header Location com o código da URI
-		response.setHeader("Location", uri.toASCIIString());
+		//response.setHeader("Location", uri.toASCIIString());
 		
 		//Já declaro o status aqui
 		return ResponseEntity.created(uri).body(categoriaSalva); 
 	}
 	
 	@GetMapping("/{codigo}")
-	public Categoria buscarPeloCodigo(@PathVariable long codigo){
+	public Categoria buscarPeloCodigo(long codigo){
 		return categoriaRepository.findOne(codigo);
 	}
 
