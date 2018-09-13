@@ -1,0 +1,8 @@
+CREATE TABLE lancamento (
+	codigo BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
+    descricao VARCHAR(50) NOT NULL,
+    dataVencimento DATE_FORMAT(CURDATE() ‘%d/%m/%Y’) NOT NULL,
+    dataPagamento DATE_FORMAT(CURDATE() ‘%d/%m/%Y’) NOT NULL,
+    valor DECIMAL (0,0) NOT NULL,
+    observacao VARCHAR(50) NOT NULL    
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

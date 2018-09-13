@@ -1,0 +1,5 @@
+CREATE TABLE tipoLancamento (
+	codigo BIGINT(20) PRIMARY KEY AUTO_INCREMENT,
+    receita INT(1),
+    despesa INT(2)    
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
