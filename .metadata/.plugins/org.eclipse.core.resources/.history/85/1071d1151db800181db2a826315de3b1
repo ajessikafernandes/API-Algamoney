@@ -1,0 +1,5 @@
+package com.example.algamoney.api.exeptionhandler;
+
+public class AlgamoneyExceptionHandler {
+
+}

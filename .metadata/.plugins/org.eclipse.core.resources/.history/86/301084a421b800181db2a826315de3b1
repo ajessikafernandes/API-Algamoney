@@ -1,0 +1,61 @@
+package com.example.algamoney.api.exeptionhandler;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+//Essa anotação observa toda a aplicação, e é um componente do Spring
+@ControllerAdvice
+public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler {
+	// Classe que captura exceções de uma troca de entidades
+	// A classe ResponseEntityExceptionHandler, possui vários metodos que
+	// facilitam o tratamento de exceções
+
+	@Autowired
+	private MessageSource messageSource;
+
+	// Aqui eu capturo as mensagens que não foram aceitas com o POST
+	@Override
+	protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+		// Traz a mensagem para o usuário
+		// Essa mensagem inválida deve ser conforme messages.properties
+		// Locale Corrent
+		String mensagemUsuario = messageSource.getMessage("mensagem.invalida", null, LocaleContextHolder.getLocale());
+
+		// Traz a mensagem para o desenvolvedor
+		String mensagemDesenvolvedor = ex.getCause().toString();
+
+		// para tratar a mensagem de retorno interna da exceção
+		return handleExceptionInternal(ex, "Mensagem Inválida", headers, HttpStatus.BAD_REQUEST, request);
+	}
+
+	public static class Erro {
+
+		private String mensagemUser;
+		private String mensagemDevelopment;
+
+		public Erro(String mensagemUser, String mensagemDevelopment) {
+			this.mensagemUser = mensagemUser;
+			this.mensagemDevelopment = mensagemDevelopment;
+		}
+
+		public String getMensagemUser() {
+			return mensagemUser;
+		}
+
+		public String getMensagemDevelopment() {
+			return mensagemDevelopment;
+		}
+
+	}
+
+}

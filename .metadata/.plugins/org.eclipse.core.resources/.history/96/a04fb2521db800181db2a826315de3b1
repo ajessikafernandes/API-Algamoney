@@ -1,0 +1,8 @@
+package com.example.algamoney.api.exeptionhandler;
+
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+//Classe que captura exceções de uma troca de entidades
+public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler{
+
+}
