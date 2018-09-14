@@ -1,5 +1,9 @@
 package com.example.algamoney.api.exeptionhandler;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -7,6 +11,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -34,9 +41,36 @@ public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler {
 		// Traz a mensagem para o desenvolvedor
 		String mensagemDesenvolvedor = ex.getCause().toString();
 
+		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+
 		// para tratar a mensagem de retorno interna da exceção
-		return handleExceptionInternal(ex, new Erro(mensagemUsuario, mensagemDesenvolvedor), headers, HttpStatus.BAD_REQUEST,
-				request);
+		return handleExceptionInternal(ex, erros, headers, HttpStatus.BAD_REQUEST, request);
+	}
+
+	// Metódo para tratar o argumento de um metódo inválido
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+		
+		// Aqui será passada uma lista de erros * Já tratados
+		// BindingResult trás a lista de todos os erros
+		List<Erro> erro = criarListaDeErros(ex.getBindingResult());
+		return handleExceptionInternal(ex, erro, headers, HttpStatus.BAD_REQUEST, request);
+	}
+
+	// Criada a lista de erross
+	private List<Erro> criarListaDeErros(BindingResult bindingResult) {
+		List<Erro> erros = new ArrayList<>();
+		// BindingResult trás a lista de todos os erros
+		for (FieldError fieldError : bindingResult.getFieldErrors()){
+		//Melhorando mensagem para o usuário
+		//Usando o messageSource
+		String mensagemUsuario = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+		String mensagemDesenvolvedor = fieldError.toString();
+		erros.add(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+		}
+		
+		return erros;
 	}
 
 	public static class Erro {

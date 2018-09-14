@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,10 +38,11 @@ public class CategoriaResource {
 	// Salva a criação da categoria no BD
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Categoria> criar(@RequestBody Categoria categoria, HttpServletResponse response) {
+	// Valida a categioria que está recebendo
+	public ResponseEntity<Categoria> criar(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
 		Categoria categoriaSalva = categoriaRepository.save(categoria);//Consigo pegar o código
 		
-		//      Vou pegar da classe ServletUriComponentsBuilder e requisição atual (que é categoria) depois adicionar o código     
+		// Vou pegar da classe ServletUriComponentsBuilder e requisição atual (que é categoria) depois adicionar o código     
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
 				.path("/{codigo}")//na URI
 				.buildAndExpand(categoriaSalva.getCodigo())

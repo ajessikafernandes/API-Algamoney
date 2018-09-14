@@ -5,16 +5,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "categoria")
 public class Categoria {
 
-	private Long codigo;
-	private String nome;
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long codigo;
+	
+	//O Arquivo ValidationMessages, está responsável por informar qual o dado
+	//Está faltando, deverá aparecer quando for usado o metódo POST, usando NULL
+	@NotNull
+	//A anotação Size determina a quantidade de caracteres que deve ser inserido
+	@Size(min = 3, max = 30)
+	private String nome;
+
 	public Long getCodigo() {
 		return codigo;
 	}
